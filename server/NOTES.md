@@ -4,8 +4,8 @@ Using wscat to test websocket server
 # start server
 bun run dev
 
-# connect
-bunx wscat --connect "ws://localhost:3000"
+# connect to server
+bun run connect
 
 # send message
 { "operation": "ADD(+)", "addend": 10, "augend": 20 }
