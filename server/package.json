@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "wscat": "^5.2.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
