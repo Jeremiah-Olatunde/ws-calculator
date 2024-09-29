@@ -38,6 +38,12 @@ const server = Bun.serve({
 			const operation: Operation = parsed.data;
 
 			console.log("ws(message):", operation);
+
+			const solution = solve(operation);
+
+			console.log("op: computed solution =", solution);
+
+			ws.send(solve(operation).toString());
 		},
 		open(_ws) {
 			console.log("ws(open): connection established");
@@ -49,3 +55,13 @@ const server = Bun.serve({
 })
 
 console.log(`SERVER RUNNING |  hostname: ${server.hostname} | port: ${server.port}`);
+
+
+function solve(operation: Operation): number {
+	switch(operation.operation){
+		case "ADD(+)": return operation.augend + operation.addend;
+		case "DIV(/)": return operation.dividend / operation.divisor;
+		case "SUB(-)": return operation.subtrahend - operation.minuend;
+		case "MUL(*)": return operation.multiplicand * operation.multiplier;
+	}
+}
