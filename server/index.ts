@@ -1,4 +1,5 @@
 import { type Operation, SchemaOperation } from "./schema";
+import { safeParseJSON } from "./utils";
 
 const server = Bun.serve({
 	fetch(request, server) {
@@ -48,12 +49,3 @@ const server = Bun.serve({
 })
 
 console.log(`SERVER RUNNING |  hostname: ${server.hostname} | port: ${server.port}`);
-
-
-const safeParseJSON = (x: string): unknown | null => {
-	try {
-		return JSON.parse(x);
-	} catch(error) {
-		return null;
-	}
-}
