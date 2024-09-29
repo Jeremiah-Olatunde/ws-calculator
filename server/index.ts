@@ -1,5 +1,5 @@
-import { type Operation, SchemaOperation } from "./schema";
 import { safeParseJSON } from "./utils";
+import { type Operation, SchemaOperation, solve } from "./operation";
 
 const server = Bun.serve({
 	fetch(request, server) {
@@ -15,14 +15,14 @@ const server = Bun.serve({
 			console.log("ws(message): message received ->", message);
 
 
-			if(typeof message !== "string"){
+			if (typeof message !== "string") {
 				console.error(`ws(message): buffers are not supported`);
 				return;
 			};
 
 			const rawJSON = safeParseJSON(message);
 
-			if(rawJSON === null){
+			if (rawJSON === null) {
 				console.error(`ws(message): invalid json`);
 				return;
 			}
@@ -30,7 +30,7 @@ const server = Bun.serve({
 
 			const parsed = SchemaOperation.safeParse(rawJSON);
 
-			if(parsed.error){
+			if (parsed.error) {
 				console.error(`ws(message): invalid data`, parsed.error.errors);
 				return;
 			}
@@ -55,13 +55,3 @@ const server = Bun.serve({
 })
 
 console.log(`SERVER RUNNING |  hostname: ${server.hostname} | port: ${server.port}`);
-
-
-function solve(operation: Operation): number {
-	switch(operation.operation){
-		case "ADD(+)": return operation.augend + operation.addend;
-		case "DIV(/)": return operation.dividend / operation.divisor;
-		case "SUB(-)": return operation.subtrahend - operation.minuend;
-		case "MUL(*)": return operation.multiplicand * operation.multiplier;
-	}
-}

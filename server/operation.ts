@@ -48,3 +48,13 @@ export const SchemaOperation = z.discriminatedUnion("operation", [
 ]);
 
 export type Operation = z.infer<typeof SchemaOperation>;
+
+
+export function solve(operation: Operation): number {
+	switch(operation.operation){
+		case "ADD(+)": return operation.augend + operation.addend;
+		case "DIV(/)": return operation.dividend / operation.divisor;
+		case "SUB(-)": return operation.subtrahend - operation.minuend;
+		case "MUL(*)": return operation.multiplicand * operation.multiplier;
+	}
+}
