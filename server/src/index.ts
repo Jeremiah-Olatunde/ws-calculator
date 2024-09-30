@@ -16,7 +16,14 @@ const server = Bun.serve({
 
 
 			if (typeof message !== "string") {
-				console.error(`ws(message): buffers are not supported`);
+				console.error(`ws(message): websocket message must be a string`);
+
+				ws.send(JSON.stringify({
+					messageType: "ERROR",
+					errorType: "MessageTypeError",
+					reason: "websocket message must be a string",
+				}));
+
 				return;
 			};
 
@@ -24,6 +31,12 @@ const server = Bun.serve({
 
 			if (rawJSON === null) {
 				console.error(`ws(message): invalid json`);
+				ws.send(JSON.stringify({
+					messageType: "ERROR",
+					errorType: "JsonError",
+					reason: "invalid json: unable to parse message"
+				}));
+
 				return;
 			}
 
@@ -32,6 +45,12 @@ const server = Bun.serve({
 
 			if (parsed.error) {
 				console.error(`ws(message): invalid data`, parsed.error.errors);
+				ws.send(JSON.stringify({
+					messageType: "ERROR",
+					errorType: "ValidationError",
+					reason: parsed.error.errors,
+				}))
+
 				return;
 			}
 
@@ -43,7 +62,10 @@ const server = Bun.serve({
 
 			console.log("op: computed solution =", solution);
 
-			ws.send(solve(operation).toString());
+			ws.send(JSON.stringify({
+				messageType: "result",
+				value: solve(operation)
+			}));
 		},
 		open(_ws) {
 			console.log("ws(open): connection established");
